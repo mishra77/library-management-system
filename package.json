@@ -18,7 +18,10 @@
   "homepage": "https://github.com/mishra77/library-management-system#readme",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.18.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

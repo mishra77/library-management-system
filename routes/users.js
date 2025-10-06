@@ -1,5 +1,6 @@
 const express = require("express");
 const {users} = require("../data/users.json");
+const { getAllUsers, getSingleUserById, createUser, updateUserById, deleteUserById, getSubscriptionDetailsById } = require("../controllers/user-controller");
 
 const router = express.Router(); 
 
@@ -14,12 +15,14 @@ const router = express.Router();
  * Access : Public
  * Parameters : None
  */
-router.get("/", (req,res) => {
-    res.status(200).json({
-        success : true,
-        data : users
-    })
-})
+// router.get("/", (req,res) => {
+//     res.status(200).json({
+//         success : true,
+//         data : users
+//     })
+// })
+
+router.get("/" , getAllUsers);
 
 
 /**
@@ -29,22 +32,24 @@ router.get("/", (req,res) => {
  * Access : Public
  * Parameters : id
  */
-router.get("/:id",(req,res) => {
+// router.get("/:id",(req,res) => {
 
-    const {id} = req.params;
-    const user = users.find((each)=> each.id === id);
+//     const {id} = req.params;
+//     const user = users.find((each)=> each.id === id);
 
-    if(!user){
-        return res.status(404).json({
-            success : false,
-            message : `user ${id} not found`
-        });
-    };
-    res.status(200).json({
-        success : true,
-        data : user
-    });
-});
+//     if(!user){
+//         return res.status(404).json({
+//             success : false,
+//             message : `user ${id} not found`
+//         });
+//     };
+//     res.status(200).json({
+//         success : true,
+//         data : user
+//     });
+// });
+
+router.get("/:id", getSingleUserById);
 
 /**
  * Route : users
@@ -53,33 +58,37 @@ router.get("/:id",(req,res) => {
  * Access : Public
  * Parameters : none
  */
-router.post("/",(req,res)=>{
-    const {id, name, surname, email, subscriptionType, subscriptionDate} = req.body;
+// router.post("/",(req,res)=>{
+//     const {id, name, surname, email, subscriptionType, subscriptionDate} = req.body;
 
-    if(!id || !name || !surname || !email || !subscriptionType || !subscriptionDate){
-        return res.status(404).json({
-            success : false,
-            message : `please provide all the required fields`
-        });
-    };
-    const user = users.find((each)=> each.id === id);
+//     if(!id || !name || !surname || !email || !subscriptionType || !subscriptionDate){
+//         return res.status(404).json({
+//             success : false,
+//             message : `please provide all the required fields`
+//         });
+//     };
+//     const user = users.find((each)=> each.id === id);
 
-    //check if user already exists
-    if(user){
-        return res.status(404).json({
-            success : false,
-            message : `user already exists! with id : ${id}`
-        });
-    }
+//     //check if user already exists
+//     if(user){
+//         return res.status(404).json({
+//             success : false,
+//             message : `user already exists! with id : ${id}`
+//         });
+//     }
 
-        users.push({
-            id, name, surname, email, subscriptionType, subscriptionDate
-        })
-        res.status(201).json({
-            success : true,
-            message : `user added successfully!`
-        });
-});
+//         users.push({
+//             id, name, surname, email, subscriptionType, subscriptionDate
+//         })
+//         res.status(201).json({
+//             success : true,
+//             message : `user added successfully!`
+//         });
+// });
+
+router.post("/", createUser);
+
+
 
 /**
  * Route : users/:id
@@ -88,36 +97,37 @@ router.post("/",(req,res)=>{
  * Access : Public
  * Parameters : id
  */
-router.put("/:id",(req,res)=>{
-    const {id} = req.params;
-    const {data} = req.body;
+// router.put("/:id",(req,res)=>{
+//     const {id} = req.params;
+//     const {data} = req.body;
 
-    const user = users.find((each)=> each.id === id);
+//     const user = users.find((each)=> each.id === id);
 
-    if(!user){
-        return res.status(404).json({
-            success : false,
-            message : `user ${id} not found`
-        });
-    };
+//     if(!user){
+//         return res.status(404).json({
+//             success : false,
+//             message : `user ${id} not found`
+//         });
+//     };
 
-    // Object.assign(user, data);
+//     // Object.assign(user, data);
 
-    const updatedUser = users.map((each)=>{
-        if(each.id === id){
-            return {
-                ...each,
-                ...data,
-            }
-        }
-        return each;
-    })
-    res.status(200).json({
-            success : true,
-            data : updatedUser,
-            message : `user ${id} updated successfully!`
-        });
-});
+//     const updatedUser = users.map((each)=>{
+//         if(each.id === id){
+//             return {
+//                 ...each,
+//                 ...data,
+//             }
+//         }
+//         return each;
+//     })
+//     res.status(200).json({
+//             success : true,
+//             data : updatedUser,
+//             message : `user ${id} updated successfully!`
+//         });
+// });
+router.put("/:id", updateUserById);
 
 /**
  * Route : users/:id
@@ -126,31 +136,32 @@ router.put("/:id",(req,res)=>{
  * Access : Public
  * Parameters : id
  */
-router.delete("/:id", (req,res)=>{
-    const {id} = req.params;
-    const user = users.find((each)=> each.id === id);
-    if(!user){
-        return res.status(404).json({
-            success : false,
-            message : `user ${id} not found`
-        });
-    };
-    const updatedUsers = users.filter((each)=> each.id != id);
+// router.delete("/:id", (req,res)=>{
+//     const {id} = req.params;
+//     const user = users.find((each)=> each.id === id);
+//     if(!user){
+//         return res.status(404).json({
+//             success : false,
+//             message : `user ${id} not found`
+//         });
+//     };
+//     const updatedUsers = users.filter((each)=> each.id != id);
 
-    //2nd method
+//     //2nd method
 
-    // const index = users.indexOf(user);
-    // users.splice(index, 1);
+//     // const index = users.indexOf(user);
+//     // users.splice(index, 1);
 
-    if(!user){
-        return res.status(200).json({
-            success : true,
-            data : updatedUsers,
-            message : `user ${id} deleted successfully!`
-        });
-    };
+//     if(!user){
+//         return res.status(200).json({
+//             success : true,
+//             data : updatedUsers,
+//             message : `user ${id} deleted successfully!`
+//         });
+//     };
 
-});
+// });
+router.delete("/:id", deleteUserById);
 
 /**
  * Route : users/subscription/:id
@@ -159,115 +170,116 @@ router.delete("/:id", (req,res)=>{
  * Access : Public
  * Parameters : id
  */
-router.get("/subscription-details/:id", (req,res)=>{
-    const {id} = req.params;
-    const user = users.find((each)=> each.id === id);
-    if(!user){
-        return res.status(404).json({
-            success : false,
-            message : `user ${id} not found`
-        });
-    };
+// router.get("/subscription-details/:id", (req,res)=>{
+//     const {id} = req.params;
+//     const user = users.find((each)=> each.id === id);
+//     if(!user){
+//         return res.status(404).json({
+//             success : false,
+//             message : `user ${id} not found`
+//         });
+//     };
 
 
-    //Extract the subscription details
-    // const getDateInDays = ((date = " ") => {
-    //     let date;
-    //     if(date){
-    //         date = new date(data);
-    //     }else{
-    //         date = new date();
-    //     }
-    //     let days =  Math.floor(date.getTime()/(1000 * 60 * 60 *24));
-    //     return days;
-    // });
+//     //Extract the subscription details
+//     // const getDateInDays = ((date = " ") => {
+//     //     let date;
+//     //     if(date){
+//     //         date = new date(data);
+//     //     }else{
+//     //         date = new date();
+//     //     }
+//     //     let days =  Math.floor(date.getTime()/(1000 * 60 * 60 *24));
+//     //     return days;
+//     // });
 
-    // Issues:
+//     // Issues:
 
-    // You declare date twice → function parameter (date) and inside let date;.
-    // → ❌ Causes SyntaxError: Identifier 'date' has already been declared.
+//     // You declare date twice → function parameter (date) and inside let date;.
+//     // → ❌ Causes SyntaxError: Identifier 'date' has already been declared.
 
-    // You use new date(...) instead of new Date(...) (capital D).
+//     // You use new date(...) instead of new Date(...) (capital D).
 
-    // You reference data instead of date. data doesn’t exist here.
-
-
-
-
-    const getDateInDays = (dateInput = "") => {
-    let givenDate;
-    if (dateInput) {
-        givenDate = new Date(dateInput);
-    } else {
-        givenDate = new Date();
-    }
-    let days = Math.floor(givenDate.getTime() / (1000 * 60 * 60 * 24));
-    return days;
-    };
-
-    // ternary operator instead of if else :    
-    // const getDateInDays = (dateInput = "") => {
-    //     let givenDate = dateInput ? new Date(dateInput) : new Date();
-    //     return Math.floor(givenDate.getTime() / (1000 * 60 * 60 * 24));
-    // };
+//     // You reference data instead of date. data doesn’t exist here.
 
 
 
-    const subscriptionType = (date) => {
-        if(user.subscriptionType === "Basic"){
-            date = date + 90;
-        }else if(user.subscriptionType === "Standard"){
-            date = date + 180;
-        }else if(user.subscriptionType === "Premium"){
-            date = date + 365;
-        }
-        return date;
-    };
+
+//     const getDateInDays = (dateInput = "") => {
+//     let givenDate;
+//     if (dateInput) {
+//         givenDate = new Date(dateInput);
+//     } else {
+//         givenDate = new Date();
+//     }
+//     let days = Math.floor(givenDate.getTime() / (1000 * 60 * 60 * 24));
+//     return days;
+//     };
+
+//     // ternary operator instead of if else :    
+//     // const getDateInDays = (dateInput = "") => {
+//     //     let givenDate = dateInput ? new Date(dateInput) : new Date();
+//     //     return Math.floor(givenDate.getTime() / (1000 * 60 * 60 * 24));
+//     // };
 
 
-    //instead of if else -> directly using if statement
-    // const subscriptionType = (date) => {
-    // if(user.subscriptionType === "Basic") return date + 90;
-    // if(user.subscriptionType === "Standard") return date + 180;
-    // if(user.subscriptionType === "Premium") return date + 365;
-    // return date;
-    // };
+
+//     const subscriptionType = (date) => {
+//         if(user.subscriptionType === "Basic"){
+//             date = date + 90;
+//         }else if(user.subscriptionType === "Standard"){
+//             date = date + 180;
+//         }else if(user.subscriptionType === "Premium"){
+//             date = date + 365;
+//         }
+//         return date;
+//     };
 
 
-    //   can also use switch statement    instead
-    //     const subscriptionType = (date) => {
-    // switch (user.subscriptionType) {
-    //     case "Basic": return date + 90;
-    //     case "Standard": return date + 180;
-    //     case "Premium": return date + 365;
-    //     default: return date; // or throw an error if invalid
-    // }   
-    // };
-
-    //subscription expiration calculation
-    //January 1, 1970 - milliseconds
-
-    let returnDate = getDateInDays(user.returnDate);
-    let currentDate = getDateInDays();
-    let subscriptionDate = getDateInDays(user.subscriptionDate);
-    let subscriptionExpiration = subscriptionType(subscriptionDate);
+//     //instead of if else -> directly using if statement
+//     // const subscriptionType = (date) => {
+//     // if(user.subscriptionType === "Basic") return date + 90;
+//     // if(user.subscriptionType === "Standard") return date + 180;
+//     // if(user.subscriptionType === "Premium") return date + 365;
+//     // return date;
+//     // };
 
 
-    const data = {
-        ...user,
-        subscriptionExpired : subscriptionExpiration < currentDate,
-        subscriptionDaysLeft : subscriptionExpiration - currentDate,
-        daysLeftForExpiration : returnDate - currentDate,
-        returnDate : returnDate  < currentDate ? "Book is Overdue"  : returnDate,
-        fine : returnDate < currentDate ? subscriptionExpiration <= currentDate ? 200 : 100 : 0
-    }
+//     //   can also use switch statement    instead
+//     //     const subscriptionType = (date) => {
+//     // switch (user.subscriptionType) {
+//     //     case "Basic": return date + 90;
+//     //     case "Standard": return date + 180;
+//     //     case "Premium": return date + 365;
+//     //     default: return date; // or throw an error if invalid
+//     // }   
+//     // };
+
+//     //subscription expiration calculation
+//     //January 1, 1970 - milliseconds
+
+//     let returnDate = getDateInDays(user.returnDate);
+//     let currentDate = getDateInDays();
+//     let subscriptionDate = getDateInDays(user.subscriptionDate);
+//     let subscriptionExpiration = subscriptionType(subscriptionDate);
 
 
-     res.status(200).json({
-            success : true,
-            data : data
-        });
+//     const data = {
+//         ...user,
+//         subscriptionExpired : subscriptionExpiration < currentDate,
+//         subscriptionDaysLeft : subscriptionExpiration - currentDate,
+//         daysLeftForExpiration : returnDate - currentDate,
+//         returnDate : returnDate  < currentDate ? "Book is Overdue"  : returnDate,
+//         fine : returnDate < currentDate ? subscriptionExpiration <= currentDate ? 200 : 100 : 0
+//     }
 
-});
+
+//      res.status(200).json({
+//             success : true,
+//             data : data
+//         });
+
+// });
+router.get("/subscription-details/:id", getSubscriptionDetailsById);
 
 module.exports = router;
